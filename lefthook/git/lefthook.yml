@@ -1,0 +1,27 @@
+# =============================================================================
+# lefthook/git/lefthook.yml
+# Git-agnostic hooks.
+#
+# Covers:
+#   - commit-msg  : Conventional Commits format enforcement (commitlint)
+#   - pre-commit  : Secret detection (secretlint)
+# =============================================================================
+
+commit-msg:
+  commands:
+    commitlint:
+      run: bunx commitlint --config ./dev-configs/lefthook/git/commitlint.config.cjs --edit {1}
+      fail_text: |
+        ✗ Commit message does not follow Conventional Commits format.
+        Valid format: <type>(<scope>): <subject>
+
+pre-commit:
+  parallel: true
+  commands:
+    secretlint:
+      priority: 1
+      glob: "*"
+      run: bunx secretlint --secretlintrc ./dev-configs/lefthook/git/.secretlintrc.json --secretlintignore ./dev-configs/lefthook/git/.secretlintignore {staged_files}
+      fail_text: |
+        ✗ Potential secrets detected in staged files!
+        Remove API keys, tokens, or passwords before committing.
