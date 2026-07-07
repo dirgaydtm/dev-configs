@@ -1,0 +1,67 @@
+# =============================================================================
+# lefthook/ts/lefthook.yml
+# TypeScript specific hooks.
+#
+# Covers:
+#   - pre-commit  : Biome, TypeScript type-check, no-debug-code
+#   - pre-push    : build, audit
+#   - post-checkout: auto install on lockfile change
+# =============================================================================
+
+pre-commit:
+  parallel: true
+  commands:
+    biome:
+      priority: 1
+      glob: "*.{js,cjs,mjs,ts,tsx,jsx,json,jsonc,css}"
+      run: bunx biome check --write --no-errors-on-unmatched {staged_files}
+      stage_fixed: true
+      fail_text: |
+        ✗ Biome found issues that couldn't be auto-fixed.
+        Run `bunx biome check --write .` locally to see full details.
+
+    typecheck:
+      priority: 2
+      glob: "*.{ts,tsx}"
+      run: bunx tsgo --noEmit
+      fail_text: |
+        ✗ TypeScript type errors found. Fix all type errors before committing.
+        Run `bunx tsgo --noEmit` locally to check.
+
+    no-debug-code:
+      priority: 1
+      glob: "*.{js,cjs,mjs,ts,tsx,jsx,vue,svelte}"
+      run: |
+        if grep -rn --color=always \
+          -e 'console\.log(' \
+          -e 'console\.debug(' \
+          -e '\bdebugger\b' \
+          {staged_files} 2>/dev/null; then
+          echo ""
+          echo "✗ Debug code found in staged files."
+          echo "  Remove console.log / debugger statements before committing."
+          exit 1
+        fi
+      fail_text: "Remove debug code before committing."
+
+pre-push:
+  parallel: true
+  commands:
+    build:
+      run: bun run build
+      fail_text: |
+        ✗ Build failed. Fix the build errors before pushing.
+    audit:
+      run: bun pm audit --audit-level high
+      fail_text: |
+        ✗ High-severity vulnerabilities found in dependencies.
+        Run audit for details.
+
+post-checkout:
+  commands:
+    install-deps:
+      files: git diff --name-only HEAD@{1} HEAD
+      glob: "{package.json,bun.lockb,bun.lock}"
+      run: |
+        echo "📦 Dependency files changed — installing..."
+        bun install
