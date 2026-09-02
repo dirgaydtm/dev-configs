@@ -1,0 +1,34 @@
+# =============================================================================
+# lefthook/flutter/lefthook.yml
+# Flutter specific hooks.
+#
+# Covers:
+#   - pre-commit  : format, fix, analyze, no-debug-print
+#   - pre-push    : analyze-strict
+# =============================================================================
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      glob: "*.dart"
+      run: dart format {staged_files}
+      stage_fixed: true
+    fix:
+      glob: "*.dart"
+      run: dart fix --apply
+      stage_fixed: true
+    analyze:
+      glob: "*.dart"
+      run: flutter analyze --fatal-infos
+    no-debug-print:
+      glob: "*.dart"
+      run: |
+        if grep -n "print(" {staged_files}; then
+          echo "Found print() — use a logger instead of print()"
+          exit 1
+        fi
+
+pre-push:
+  commands:
+    analyze-strict:
+      run: flutter analyze --fatal-infos --fatal-warnings
