@@ -1,9 +1,10 @@
 # dev-configs
 
-> Opinionated, production-grade developer tooling configurations for JavaScript & TypeScript projects.
+My personal configs that help my day-to-day development as a Software Engineer.
 
-This repository is a single source of truth for shared tooling configs.
-Each configuration is self-contained, documented, and designed to be adopted incrementally.
+Honestly, I just got sick of copy-pasting the exact same configs and scripts every single time I start a new project. I'd fix an annoying rule in one repo, completely forget about it, and then get annoyed when the same issue popped up again somewhere else. Keeping everything synced manually was driving me crazy, so I finally dumped all my setups into this one repo.
+
+So yeah, this is basically just my personal config dump. Whenever I find a cool new trick or a better way to set things up, I just toss it in here so I can pull it down easily next time. It's built 100% for how I like to work, so I'm not really maintaining it for other people. But if you happen to find something in here that saves you a headache, feel free to just grab it!
 
 ---
 
@@ -18,10 +19,10 @@ Each configuration is self-contained, documented, and designed to be adopted inc
 
 ## Available Configurations
 
-| Tool | Description | Documentation |
-| ---- | ----------- | ------------- |
-| **Lefthook** | Git hooks orchestration (pre-commit, pre-push, etc.) | [docs/lefthook.md](./docs/lefthook.md) |
-| **VS Code** | Editor settings (Biome format, import updates, best practices) | [docs/vscode.md](./docs/vscode.md) |
+| Tool         | Description                                                    | Documentation                          |
+| ------------ | -------------------------------------------------------------- | -------------------------------------- |
+| **Lefthook** | Git hooks orchestration (pre-commit, pre-push, etc.)           | [docs/lefthook.md](./docs/lefthook.md) |
+| **VS Code**  | Editor settings (Biome format, import updates, best practices) | [docs/vscode.md](./docs/vscode.md)     |
 
 ---
 
@@ -42,6 +43,8 @@ dev-configs/
     │   ├── commitlint.config.cjs
     │   ├── .secretlintrc.json
     │   └── .secretlintignore
+    ├── flutter/                      # Flutter specific hooks
+    │   └── lefthook.yml
     ├── js/                           # JavaScript specific hooks
     │   └── lefthook.yml
     └── ts/                           # TypeScript specific hooks (includes typecheck)
@@ -50,4 +53,4 @@ dev-configs/
 
 ---
 
-<sub>Maintained with ♥ — PRs welcome.</sub>
+<sub>Feel free to copy!</sub>
